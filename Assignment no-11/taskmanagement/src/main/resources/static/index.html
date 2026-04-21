@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>College Task Dashboard</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f4f7fc;
+            --surface: #ffffff;
+            --surface-2: #f8fbff;
+            --text: #1f2937;
+            --muted: #64748b;
+            --primary: #2f80ed;
+            --primary-soft: #e8f0ff;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: rgba(148, 163, 184, 0.16);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+        .layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+        .sidebar { background: #1f2937; color: #f8fafc; padding: 28px 20px; display: flex; flex-direction: column; gap: 26px; }
+        .sidebar h2 { margin: 0; font-size: 1.15rem; letter-spacing: 0.02em; }
+        .nav-section { display: grid; gap: 10px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; color: #cbd5e1; padding: 12px 14px; border-radius: 14px; text-decoration: none; transition: background 0.2s ease, color 0.2s ease; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.08); color: #ffffff; }
+        .nav-item span { width: 8px; height: 8px; border-radius: 999px; background: #60a5fa; display: inline-block; }
+        .brand { display: grid; gap: 10px; }
+        .brand strong { font-size: 1.25rem; }
+        .brand p { margin: 0; color: #94a3b8; font-size: 0.95rem; }
+
+        .main { padding: 28px; display: grid; gap: 24px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .topbar h1 { margin: 0; font-size: 1.9rem; }
+        .topbar small { color: var(--muted); }
+        .progress-card { background: var(--surface); border-radius: 24px; padding: 24px; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08); display: grid; gap: 18px; }
+        .progress-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .progress-bar { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+        .progress-fill { height: 100%; width: 50%; background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%); }
+        .overview-grid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .stat-card { border-radius: 20px; padding: 20px; background: var(--surface); box-shadow: 0 15px 40px rgba(15, 23, 42, 0.05); }
+        .stat-card h3 { margin: 0 0 12px; font-size: 1rem; color: var(--muted); }
+        .stat-card strong { display: block; font-size: 1.75rem; margin-bottom: 8px; }
+        .stat-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 0.85rem; }
+
+        .dashboard-grid { display: grid; gap: 20px; grid-template-columns: 1.2fr 0.8fr; }
+        .panel { background: var(--surface); border-radius: 24px; padding: 24px; box-shadow: 0 15px 40px rgba(15, 23, 42, 0.05); }
+        .panel h2 { margin-top: 0; font-size: 1.2rem; }
+        .panel .row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+        .panel .button { border: none; border-radius: 999px; padding: 12px 18px; background: var(--primary); color: white; cursor: pointer; transition: transform 0.15s ease; }
+        .panel .button:hover { transform: translateY(-1px); }
+        .task-list { display: grid; gap: 18px; }
+        .task-card { border-radius: 18px; padding: 18px; background: var(--surface-2); border: 1px solid var(--border); display: grid; gap: 12px; }
+        .task-card .meta { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 0.9rem; }
+        .task-card .task-name { margin: 0; font-size: 1.05rem; }
+        .task-card .chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 999px; background: rgba(59, 130, 246, 0.12); color: #1d4ed8; font-size: 0.85rem; }
+        .task-card .progress { display: flex; align-items: center; gap: 12px; }
+        .task-card .progress span { width: 110px; height: 8px; border-radius: 999px; background: #e2e8f0; position: relative; overflow: hidden; }
+        .task-card .progress span::after { content: ''; position: absolute; top: 0; left: 0; width: 60%; height: 100%; background: linear-gradient(90deg, #38bdf8 0%, #60a5fa 100%); border-radius: 999px; }
+        .task-card .avatars { display: flex; align-items: center; gap: 6px; }
+        .avatar { width: 32px; height: 32px; border-radius: 999px; background: #c7d2fe; display: flex; align-items: center; justify-content: center; color: #3730a3; font-size: 0.85rem; font-weight: 700; }
+
+        .form-grid { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
+        .form-card { background: var(--surface); border-radius: 22px; padding: 22px; display: grid; gap: 16px; }
+        .form-card label { display: block; color: var(--muted); font-size: 0.9rem; margin-bottom: 8px; }
+        .form-card input, .form-card select, .form-card textarea { width: 100%; border-radius: 14px; border: 1px solid #e2e8f0; padding: 14px; background: white; font-size: 0.95rem; }
+        .form-card textarea { resize: vertical; }
+        .form-card .button { width: fit-content; }
+
+        .table-wrapper { overflow-x: auto; }
+        .compact-table { width: 100%; border-collapse: collapse; }
+        .compact-table th, .compact-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .compact-table thead { background: #f8fbff; }
+        .status-pill { padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: 0.82rem; }
+        .status-open { background: #eff6ff; color: #2563eb; }
+        .status-in-progress { background: #ecfdf5; color: #15803d; }
+        .status-completed { background: #f0fdf4; color: #15803d; }
+        .status-blocked { background: #fef2f2; color: #b91c1c; }
+
+        @media (max-width: 1100px) {
+            .layout { grid-template-columns: 1fr; }
+            .main { padding: 20px; }
+            .overview-grid, .dashboard-grid, .form-grid { grid-template-columns: 1fr; }
+            .sidebar { flex-direction: row; flex-wrap: wrap; justify-content: space-between; padding: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <strong>Pipeline</strong>
+                <p>Engineering Task Dashboard</p>
+            </div>
+            <nav class="nav-section">
+                <a class="nav-item active" href="#"><span></span>Dashboard</a>
+                <a class="nav-item" href="#"><span></span>Projects</a>
+                <a class="nav-item" href="#"><span></span>Tasks</a>
+                <a class="nav-item" href="#"><span></span>Messages</a>
+                <a class="nav-item" href="#"><span></span>Users</a>
+            </nav>
+            <div>
+                <div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:10px;">Team</div>
+                <div class="avatars" style="flex-wrap: wrap; gap:10px;">
+                    <div class="avatar">AJ</div>
+                    <div class="avatar">BC</div>
+                    <div class="avatar">DS</div>
+                    <div class="avatar">EM</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <section class="topbar">
+                <div>
+                    <h1>Project Progress Dashboard</h1>
+                    <small>Track task assignment and deadlines for faculty work</small>
+                </div>
+                <button class="button">+ Add Task</button>
+            </section>
+
+            <section class="progress-card">
+                <div class="progress-row">
+                    <div>
+                        <strong>50% Completed</strong>
+                        <p class="small">Tasks are being tracked to reduce missed deadlines.</p>
+                    </div>
+                    <div class="stat-pill">Active</div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </section>
+
+            <section class="overview-grid">
+                <div class="stat-card">
+                    <h3>Total Employees</h3>
+                    <strong id="employeeCount">0</strong>
+                    <div class="small">Active faculty members assigned to tasks</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Tasks</h3>
+                    <strong id="taskCount">0</strong>
+                    <div class="small">Open and in-progress task assignments</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Upcoming Deadlines</h3>
+                    <strong id="deadlineCount">0</strong>
+                    <div class="small">Tasks due soon that need attention</div>
+                </div>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="panel">
+                    <div class="row">
+                        <h2>Task Board</h2>
+                        <button class="button" onclick="loadData()">Refresh</button>
+                    </div>
+                    <div class="task-list" id="taskCards"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="row">
+                        <h2>Quick Actions</h2>
+                    </div>
+                    <div class="form-card">
+                        <h3>Add Employee</h3>
+                        <label for="employeeName">Name</label>
+                        <input id="employeeName" placeholder="e.g. Alice Johnson" />
+                        <label for="employeeDepartment">Department</label>
+                        <input id="employeeDepartment" placeholder="e.g. Computer Science" />
+                        <label for="employeeEmail">Email</label>
+                        <input id="employeeEmail" placeholder="e.g. alice@college.edu" />
+                        <button class="button" onclick="createEmployee()">Create Employee</button>
+                    </div>
+                    <div class="form-card">
+                        <h3>Add Task</h3>
+                        <label for="taskTitle">Title</label>
+                        <input id="taskTitle" placeholder="e.g. Exam Duty" />
+                        <label for="taskType">Type</label>
+                        <input id="taskType" placeholder="e.g. Project Guide" />
+                        <label for="taskDescription">Description</label>
+                        <textarea id="taskDescription" rows="3" placeholder="Task details"></textarea>
+                        <label for="taskDueDate">Due Date</label>
+                        <input id="taskDueDate" type="date" />
+                        <label for="taskAssignee">Assign To</label>
+                        <select id="taskAssignee"></select>
+                        <button class="button" onclick="createTask()">Create Task</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="row">
+                    <h2>Employee List</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="compact-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeTable"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function buildStatusClass(status) {
+            if (!status) return 'status-open';
+            const value = status.toLowerCase();
+            if (value.includes('open')) return 'status-open';
+            if (value.includes('progress')) return 'status-in-progress';
+            if (value.includes('complete')) return 'status-completed';
+            if (value.includes('block')) return 'status-blocked';
+            return 'status-open';
+        }
+
+        async function loadData() {
+            const [employees, tasks] = await Promise.all([
+                fetch('/api/employees').then(res => res.json()),
+                fetch('/api/tasks').then(res => res.json())
+            ]);
+
+            document.getElementById('employeeCount').textContent = employees.length;
+            document.getElementById('taskCount').textContent = tasks.length;
+            document.getElementById('deadlineCount').textContent = tasks.filter(task => task.dueDate).length;
+
+            const employeeTable = document.getElementById('employeeTable');
+            const taskCards = document.getElementById('taskCards');
+            const taskAssignee = document.getElementById('taskAssignee');
+            employeeTable.innerHTML = '';
+            taskCards.innerHTML = '';
+            taskAssignee.innerHTML = '<option value="">Unassigned</option>';
+
+            employees.forEach(emp => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${emp.name}</td><td>${emp.department}</td><td>${emp.email}</td>`;
+                employeeTable.appendChild(row);
+                taskAssignee.innerHTML += `<option value="${emp.id}">${emp.name}</option>`;
+            });
+
+            tasks.forEach(task => {
+                const assigneeName = task.assignee ? task.assignee.name : 'Unassigned';
+                const taskCard = document.createElement('article');
+                taskCard.className = 'task-card';
+                taskCard.innerHTML = `
+                    <div class="meta"><span>${task.type || 'General'}</span><span>${task.dueDate || 'No due date'}</span></div>
+                    <h3 class="task-name">${task.title}</h3>
+                    <div class="chip ${buildStatusClass(task.status)}">${task.status || 'OPEN'}</div>
+                    <div class="progress"><span></span><div>${assigneeName}</div></div>
+                    <div class="meta"><span>Assigned to ${assigneeName}</span><span>${task.description || ''}</span></div>
+                `;
+                taskCards.appendChild(taskCard);
+            });
+        }
+
+        async function createEmployee() {
+            const name = document.getElementById('employeeName').value.trim();
+            const department = document.getElementById('employeeDepartment').value.trim();
+            const email = document.getElementById('employeeEmail').value.trim();
+            if (!name || !department || !email) {
+                alert('Please fill all employee fields.');
+                return;
+            }
+            await fetch('/api/employees', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, department, email })
+            });
+            document.getElementById('employeeName').value = '';
+            document.getElementById('employeeDepartment').value = '';
+            document.getElementById('employeeEmail').value = '';
+            loadData();
+        }
+
+        async function createTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            const type = document.getElementById('taskType').value.trim();
+            const description = document.getElementById('taskDescription').value.trim();
+            const dueDate = document.getElementById('taskDueDate').value;
+            const assigneeId = document.getElementById('taskAssignee').value;
+            if (!title || !type || !description) {
+                alert('Please fill task title, type, and description.');
+                return;
+            }
+            const response = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, type, description, dueDate, status: 'OPEN' })
+            });
+            const task = await response.json();
+            if (assigneeId) {
+                await fetch(`/api/tasks/${task.id}/assign/${assigneeId}`, { method: 'PUT' });
+            }
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskType').value = '';
+            document.getElementById('taskDescription').value = '';
+            document.getElementById('taskDueDate').value = '';
+            document.getElementById('taskAssignee').value = '';
+            loadData();
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

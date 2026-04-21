@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .welcome-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            overflow: hidden;
+        }
+        
+        .welcome-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .welcome-header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .welcome-content {
+            padding: 40px 30px;
+        }
+        
+        .welcome-content h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .welcome-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .feature-list li {
+            color: #555;
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.5;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d9dfe4;
+            transform: translateY(-2px);
+        }
+        
+        .info-box {
+            background-color: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome-header">
+            <h1>🎓 Welcome to Student Portal</h1>
+            <p>College Student Information System</p>
+        </div>
+        
+        <div class="welcome-content">
+            <h2>Overview</h2>
+            <p>
+                The Student Portal is a web-based application designed to display
+                student information dynamically. This system connects to a database,
+                retrieves student details, and presents them in an organized format.
+            </p>
+            
+            <h2>Key Features</h2>
+            <ul class="feature-list">
+                <li>Dynamic student data retrieval from database</li>
+                <li>MySQL database integration</li>
+                <li>Responsive web interface</li>
+                <li>Formatted table view of all students</li>
+                <li>Error handling and validation</li>
+                <li>Modern, user-friendly design</li>
+            </ul>
+            
+            <h2>Student Information Tracked</h2>
+            <ul class="feature-list">
+                <li>Student ID (Unique Identifier)</li>
+                <li>Student Name</li>
+                <li>Class/Program</li>
+                <li>Division</li>
+                <li>City</li>
+            </ul>
+            
+            <div class="info-box">
+                <strong>📋 Note:</strong> This application uses JSP (Java Server Pages)
+                and JDBC to connect to MySQL database. Ensure MySQL server is running
+                and the database is properly configured before accessing the student list.
+            </div>
+            
+            <div class="button-group">
+                <a href="index.jsp" class="btn btn-primary">View Students</a>
+                <a href="README.md" class="btn btn-secondary">Documentation</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

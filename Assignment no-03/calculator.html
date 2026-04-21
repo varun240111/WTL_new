@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator</title>
+<script>
+function cal() {
+    var a = parseFloat(document.getElementById("n1").value);
+    var b = parseFloat(document.getElementById("n2").value);
+    var o = document.getElementById("o1").value;
+    var c;
+
+    if (o == "+") {
+        c = a + b;
+    }
+    else if (o == "-") {
+        c = a - b;
+    }
+    else if (o == "/") {    
+        c = a / b;
+    }
+    else if (o == "*") {
+        c = a * b;
+    }
+    else {
+        alert("Please Enter the correct operation..!");
+        return;
+    }
+
+    document.getElementById("result").innerHTML = "Result = " + c;
+}
+</script>
+</head>
+<body>
+<h1>Calculator</h1>
+<input type="number" id="n1" placeholder="number 1"><br>
+<input type="number" id="n2" placeholder="number 2"><br>
+<input type="text" id="o1" placeholder="operation (+,-,*,/)">
+<button onclick="cal()">Calculate</button>
+<h2 id="result"></h2>
+</body>
+</html>
