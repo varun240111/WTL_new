@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function validation(){
+            var email=document.getElementById("email").value;
+            var password=document.getElementById("password").value;
+            if(email==="" || password==="")
+        {
+            alert("Please enter all the details..!")
+            return false
+        }
+        if(!email.includes('@'))
+        {
+            alert("Please enter the correct email ID with @ symbol..!")
+            return false
+        }
+        if(password.length<8)
+        {
+            alert("The password length should be 8")
+            return false
+        }
+        return true;
+        }
+   </script>
+</head>
+<body>
+     <div class="form-section" id="contact">
+        <h2>Login </h2>
+    <form onsubmit="return validation()">
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+    <button type="submit">Login</button>
+    </form>
+    <p>Don't have a account? <a href="signup.html">sign up</a></p>
+    </div>
+</body>
+</html>
